@@ -25,7 +25,7 @@ contract patientDatabase {
         count=0;
     }
 
-    function add(uint t, uint hr, uint spO2, uint temp, uint gsr) public restricted{
+    function add(uint  t, uint  hr, uint spO2, uint temp, uint gsr) public restricted{
         v[count] = VitalSigns(t, hr, spO2, temp, gsr);
         count++;
     }
@@ -46,6 +46,7 @@ contract patientDatabase {
             end = count;
 
         uint len = end - start;
+        uint index = 0;
 
         uint[] memory t = new uint[](len);
         uint[] memory hr = new uint[](len);
@@ -54,12 +55,13 @@ contract patientDatabase {
         uint[] memory gsr = new uint[](len);
 
 
-        for (uint i = uint(start); i < uint(end); i++) {
-            t[i] = v[i].timestamp; 
-            hr[i] = v[i].heartRate; 
-            spO2[i] = v[i].spO2; 
-            temp[i] = v[i].temperature; 
-            gsr[i] = v[i].gsrValue; 
+        for (uint i = start; i < end; i++) {
+            t[index] = v[i].timestamp; 
+            hr[index] = v[i].heartRate; 
+            spO2[index] = v[i].spO2; 
+            temp[index] = v[i].temperature; 
+            gsr[index] = v[i].gsrValue; 
+            index++;
         }
         return (t, hr, spO2, temp, gsr);
     }
