@@ -1,51 +1,34 @@
-\documentclass[12pt]{article}
-\usepackage{hyperref}
-\usepackage{titlesec}
-\usepackage{enumitem}
-\usepackage{listings}
-\usepackage{xcolor}
+# patientDatabase Smart Contract
 
-\lstset{
-  basicstyle=\ttfamily\small,
-  keywordstyle=\color{blue},
-  commentstyle=\color{gray},
-  stringstyle=\color{green!70!black},
-  breaklines=true,
-  frame=single
-}
+**Secure On-Chain Storage for Remote Patient Monitoring**
 
-\title{\textbf{patientDatabase Smart Contract}\\
-\large Secure On-Chain Storage for Remote Patient Monitoring}
-\author{Ethereum Solidity Contract v0.8.25}
-\date{}
+**Ethereum Solidity Contract v0.8.25**
 
-\begin{document}
-\maketitle
+---
 
-\section*{Overview}
-\texttt{patientDatabase} is a secure Ethereum smart contract designed for remote health monitoring systems.  
-It enables authorized medical professionals to store and manage patient vital signs on the blockchain.
+## Overview
+
+`patientDatabase` is a secure Ethereum smart contract designed for remote health monitoring systems. It enables authorized medical professionals to store and manage patient vital signs on the blockchain.
 
 This contract is part of a multi-layer IoT and blockchain-based system integrating:
-\begin{itemize}[noitemsep]
-    \item IoT sensors (MAX30100, DS18B20, GSR)
-    \item Arduino + NodeMCU for data transmission
-    \item React.js frontend dashboard
-    \item Ethereum blockchain storage
-    \item Apache Cassandra (for performance comparison)
-\end{itemize}
 
-\section*{Features}
-\begin{itemize}[noitemsep]
-    \item \textbf{Role Restricted Access:} Only the assigned doctor can add, update, or fetch data.
-    \item \textbf{Add Vital Signs:} Supports single and batch uploads.
-    \item \textbf{Update Records:} Modify existing entries using an index ID.
-    \item \textbf{Fetch Data:} Retrieve a specific range or all entries.
-    \item \textbf{Ownership Transfer:} Change the doctor/manager address securely.
-\end{itemize}
+* IoT sensors (MAX30100, DS18B20, GSR)
+* Arduino + NodeMCU for data transmission
+* React.js frontend dashboard
+* Ethereum blockchain storage
+* Apache Cassandra (for performance comparison)
 
-\section*{VitalSigns Structure}
-\begin{lstlisting}[language=C]
+## Features
+
+* **Role Restricted Access:** Only the assigned doctor can add, update, or fetch data.
+* **Add Vital Signs:** Supports single and batch uploads.
+* **Update Records:** Modify existing entries using an index ID.
+* **Fetch Data:** Retrieve a specific range or all entries.
+* **Ownership Transfer:** Change the doctor/manager address securely.
+
+## VitalSigns Structure
+
+```solidity
 struct VitalSigns {
     uint timestamp;
     uint heartRate;
@@ -53,108 +36,104 @@ struct VitalSigns {
     uint temperature;
     uint gsrValue;
 }
-\end{lstlisting}
+```
 
 Each record stores:
-\begin{itemize}[noitemsep]
-    \item Unix timestamp  
-    \item Heart rate (BPM)
-    \item SpO2 oxygen saturation (\%)
-    \item Temperature
-    \item GSR skin conductance value
-\end{itemize}
 
-\section*{Key Functions}
+* Unix timestamp
+* Heart rate (BPM)
+* SpO2 oxygen saturation (%)
+* Temperature
+* GSR skin conductance value
 
-\subsection*{1. Add a Single Entry}
-\begin{lstlisting}[language=C]
-function add(uint t, uint hr, uint spO2, uint temp, uint gsr)
-    public restricted
-\end{lstlisting}
+## Key Functions
 
-\subsection*{2. Add Multiple Entries}
-\begin{lstlisting}[language=C]
-function addAll(uint[] memory t, uint[] memory hr, ...) 
-    public restricted
-\end{lstlisting}
+### 1. Add a Single Entry
 
-\subsection*{3. Update an Entry}
-\begin{lstlisting}[language=C]
+```solidity
+function add(uint t, uint hr, uint spO2, uint temp, uint gsr) public restricted
+```
+
+### 2. Add Multiple Entries
+
+```solidity
+function addAll(uint[] memory t, uint[] memory hr, ...) public restricted
+```
+
+### 3. Update an Entry
+
+```solidity
 function update(uint id, uint t, uint hr, uint spO2, uint temp, uint gsr)
-\end{lstlisting}
+```
 
-\subsection*{4. Fetch Range}
-\begin{lstlisting}[language=C]
-function fetch(uint start, uint end)
-    public view returns(...)
-\end{lstlisting}
+### 4. Fetch Range
 
-\subsection*{5. Fetch All}
-\begin{lstlisting}[language=C]
-function fetchAll() public view returns (...)
-\end{lstlisting}
+```solidity
+function fetch(uint start, uint end) public view returns(...)
+```
 
-\subsection*{6. Transfer Doctor Access}
-\begin{lstlisting}[language=C]
+### 5. Fetch All
+
+```solidity
+function fetchAll() public view returns(...)
+```
+
+### 6. Transfer Doctor Access
+
+```solidity
 function changeDoctor(address newDoctorAddress)
-\end{lstlisting}
+```
 
-\section*{Security}
-\begin{itemize}[noitemsep]
-    \item Only authorized doctor can modify blockchain data.
-    \item All entries stored immutably unless explicitly updated.
-    \item Protected using Solidity \texttt{modifier restricted}.
-    \item MIT Licensed contract.
-\end{itemize}
+## Security
 
-\section*{Tech Stack}
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Layer} & \textbf{Technology} \\ \hline
-Smart Contract & Solidity 0.8.25 \\ \hline
-Frontend & React.js, Web3.js \\ \hline
-Blockchain & Ethereum + MetaMask \\ \hline
-IoT Devices & Arduino, NodeMCU \\ \hline
-Sensors & MAX30100, DS18B20, GSR \\ \hline
-Cloud & ThingSpeak IoT Platform \\ \hline
-\end{tabular}
+* Only authorized doctor can modify blockchain data.
+* All entries stored immutably unless explicitly updated.
+* Protected using Solidity `modifier restricted`.
+* MIT Licensed contract.
 
-\section*{Deployment}
-\textbf{Using Remix IDE}
-\begin{enumerate}[noitemsep]
-    \item Open Remix: \url{https://remix.ethereum.org}
-    \item Paste the contract into a new file.
-    \item Compile using Solidity v0.8.25.
-    \item Deploy using Injected Provider (MetaMask).
-\end{enumerate}
+## Tech Stack
 
-\textbf{Using Hardhat/Truffle}
-\begin{enumerate}[noitemsep]
-    \item Place contract in \texttt{contracts/}
-    \item Run deployment scripts via CLI.
-\end{enumerate}
+| Layer          | Technology              |
+| -------------- | ----------------------- |
+| Smart Contract | Solidity 0.8.25         |
+| Frontend       | React.js, Web3.js       |
+| Blockchain     | Ethereum + MetaMask     |
+| IoT Devices    | Arduino, NodeMCU        |
+| Sensors        | MAX30100, DS18B20, GSR  |
+| Cloud          | ThingSpeak IoT Platform |
 
-\section*{Recommended GitHub Repository Names}
-\subsection*{Frontend (React)}
-\begin{itemize}[noitemsep]
-    \item \texttt{remote-patient-monitoring-frontend}
-    \item \texttt{rpm-react-dashboard}
-\end{itemize}
+## Deployment
 
-\subsection*{Smart Contract}
-\begin{itemize}[noitemsep]
-    \item \texttt{patient-monitoring-smart-contract}
-    \item \texttt{rpm-ethereum-contract}
-\end{itemize}
+**Using Remix IDE**
 
-\section*{License}
-This project is licensed under the \textbf{MIT License}.
+1. Open Remix: [https://remix.ethereum.org](https://remix.ethereum.org)
+2. Paste the contract into a new file.
+3. Compile using Solidity v0.8.25.
+4. Deploy using Injected Provider (MetaMask).
 
-\section*{Contributors}
-\begin{itemize}[noitemsep]
-    \item Raghul S
-    \item Navaneeth Narayanan
-    \item Isaac Shaju Varghese
-\end{itemize}
+**Using Hardhat/Truffle**
 
-\end{document}
+1. Place contract in `contracts/`
+2. Run deployment scripts via CLI.
+
+## Recommended GitHub Repository Names
+
+### Frontend (React)
+
+* `remote-patient-monitoring-frontend`
+* `rpm-react-dashboard`
+
+### Smart Contract
+
+* `patient-monitoring-smart-contract`
+* `rpm-ethereum-contract`
+
+## License
+
+This project is licensed under the **MIT License**.
+
+## Contributors
+
+* Raghul S
+* Navaneeth Narayanan
+* Isaac Shaju Varghese
