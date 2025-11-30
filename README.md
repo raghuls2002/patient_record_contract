@@ -1,160 +1,160 @@
-🏥 patientDatabase – Ethereum Smart Contract
-Secure On-Chain Storage for Remote Patient Vital Signs
+\documentclass[12pt]{article}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{xcolor}
 
-SPDX-License-Identifier: MIT
-Solidity Version: ^0.8.25
-
-📌 Overview
-
-patientDatabase is a lightweight yet secure Ethereum smart contract designed for remote patient monitoring systems.
-
-It stores real-time vital signs (Heart Rate, SpO₂, Temperature, GSR) on the blockchain through authorized access from a doctor (contract owner).
-
-This smart contract is part of a larger capstone system integrating:
-
-IoT sensors (MAX30100, DS18B20, GSR)
-
-Arduino + NodeMCU for data transmission
-
-React.js dashboard
-
-Ethereum blockchain for immutable medical data
-
-Big-data comparison with Apache Cassandra
-
-🎯 Features
-🔒 Access Control
-
-Only the authorized doctor address (contract owner) can add, update, or fetch data.
-
-📈 Add Vital Signs
-
-Supports adding single entry (add) or multiple entries (addAll) at once.
-
-🔄 Update Existing Records
-
-Allows updating stored records via ID.
-
-🔍 Fetch Data
-
-fetch(start, end) — get a range of records
-
-fetchAll() — get all patient records
-
-👨‍⚕️ Change Doctor
-
-Ownership can be transferred to another doctor securely.
-
-🧱 Smart Contract Structure
-VitalSigns Struct
-struct VitalSigns {
-    uint timestamp; 
-    uint heartRate;
-    uint spO2; 
-    uint temperature; 
-    uint gsrValue;
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{green!70!black},
+  breaklines=true,
+  frame=single
 }
 
+\title{\textbf{patientDatabase Smart Contract}\\
+\large Secure On-Chain Storage for Remote Patient Monitoring}
+\author{Ethereum Solidity Contract v0.8.25}
+\date{}
 
-Each entry includes:
+\begin{document}
+\maketitle
 
-timestamp – Unix time sent from device
+\section*{Overview}
+\texttt{patientDatabase} is a secure Ethereum smart contract designed for remote health monitoring systems.  
+It enables authorized medical professionals to store and manage patient vital signs on the blockchain.
 
-heartRate – BPM
+This contract is part of a multi-layer IoT and blockchain-based system integrating:
+\begin{itemize}[noitemsep]
+    \item IoT sensors (MAX30100, DS18B20, GSR)
+    \item Arduino + NodeMCU for data transmission
+    \item React.js frontend dashboard
+    \item Ethereum blockchain storage
+    \item Apache Cassandra (for performance comparison)
+\end{itemize}
 
-spO2 – Oxygen saturation (%)
+\section*{Features}
+\begin{itemize}[noitemsep]
+    \item \textbf{Role Restricted Access:} Only the assigned doctor can add, update, or fetch data.
+    \item \textbf{Add Vital Signs:} Supports single and batch uploads.
+    \item \textbf{Update Records:} Modify existing entries using an index ID.
+    \item \textbf{Fetch Data:} Retrieve a specific range or all entries.
+    \item \textbf{Ownership Transfer:} Change the doctor/manager address securely.
+\end{itemize}
 
-temperature – Body temperature
+\section*{VitalSigns Structure}
+\begin{lstlisting}[language=C]
+struct VitalSigns {
+    uint timestamp;
+    uint heartRate;
+    uint spO2;
+    uint temperature;
+    uint gsrValue;
+}
+\end{lstlisting}
 
-gsrValue – Stress/skin response reading
+Each record stores:
+\begin{itemize}[noitemsep]
+    \item Unix timestamp  
+    \item Heart rate (BPM)
+    \item SpO2 oxygen saturation (\%)
+    \item Temperature
+    \item GSR skin conductance value
+\end{itemize}
 
-📜 Contract Functions
-1. Add Data
-function add(uint t, uint hr, uint spO2, uint temp, uint gsr) public restricted
+\section*{Key Functions}
 
+\subsection*{1. Add a Single Entry}
+\begin{lstlisting}[language=C]
+function add(uint t, uint hr, uint spO2, uint temp, uint gsr)
+    public restricted
+\end{lstlisting}
 
-Adds a single vital-sign record.
+\subsection*{2. Add Multiple Entries}
+\begin{lstlisting}[language=C]
+function addAll(uint[] memory t, uint[] memory hr, ...) 
+    public restricted
+\end{lstlisting}
 
-2. Add Multiple Data Points
-function addAll(uint[] memory t, uint[] memory hr, ...)
-
-
-Used when uploading multiple records collected over time.
-
-3. Update an Entry
+\subsection*{3. Update an Entry}
+\begin{lstlisting}[language=C]
 function update(uint id, uint t, uint hr, uint spO2, uint temp, uint gsr)
+\end{lstlisting}
 
+\subsection*{4. Fetch Range}
+\begin{lstlisting}[language=C]
+function fetch(uint start, uint end)
+    public view returns(...)
+\end{lstlisting}
 
-Updates an existing record by its ID.
+\subsection*{5. Fetch All}
+\begin{lstlisting}[language=C]
+function fetchAll() public view returns (...)
+\end{lstlisting}
 
-4. Fetch a Range
-function fetch(uint start, uint end) public view returns(...)
+\subsection*{6. Transfer Doctor Access}
+\begin{lstlisting}[language=C]
+function changeDoctor(address newDoctorAddress)
+\end{lstlisting}
 
+\section*{Security}
+\begin{itemize}[noitemsep]
+    \item Only authorized doctor can modify blockchain data.
+    \item All entries stored immutably unless explicitly updated.
+    \item Protected using Solidity \texttt{modifier restricted}.
+    \item MIT Licensed contract.
+\end{itemize}
 
-Returns arrays of:
+\section*{Tech Stack}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Layer} & \textbf{Technology} \\ \hline
+Smart Contract & Solidity 0.8.25 \\ \hline
+Frontend & React.js, Web3.js \\ \hline
+Blockchain & Ethereum + MetaMask \\ \hline
+IoT Devices & Arduino, NodeMCU \\ \hline
+Sensors & MAX30100, DS18B20, GSR \\ \hline
+Cloud & ThingSpeak IoT Platform \\ \hline
+\end{tabular}
 
-timestamps
+\section*{Deployment}
+\textbf{Using Remix IDE}
+\begin{enumerate}[noitemsep]
+    \item Open Remix: \url{https://remix.ethereum.org}
+    \item Paste the contract into a new file.
+    \item Compile using Solidity v0.8.25.
+    \item Deploy using Injected Provider (MetaMask).
+\end{enumerate}
 
-heart rate
+\textbf{Using Hardhat/Truffle}
+\begin{enumerate}[noitemsep]
+    \item Place contract in \texttt{contracts/}
+    \item Run deployment scripts via CLI.
+\end{enumerate}
 
-spO₂
+\section*{Recommended GitHub Repository Names}
+\subsection*{Frontend (React)}
+\begin{itemize}[noitemsep]
+    \item \texttt{remote-patient-monitoring-frontend}
+    \item \texttt{rpm-react-dashboard}
+\end{itemize}
 
-temperature
+\subsection*{Smart Contract}
+\begin{itemize}[noitemsep]
+    \item \texttt{patient-monitoring-smart-contract}
+    \item \texttt{rpm-ethereum-contract}
+\end{itemize}
 
-GSR values
+\section*{License}
+This project is licensed under the \textbf{MIT License}.
 
-5. Fetch All Records
-function fetchAll() public view returns(...)
+\section*{Contributors}
+\begin{itemize}[noitemsep]
+    \item Raghul S
+    \item Navaneeth Narayanan
+    \item Isaac Shaju Varghese
+\end{itemize}
 
-
-Convenience function to pull all patient data.
-
-6. Change Doctor
-function changeDoctor(address newDoctorAddress) public restricted
-
-
-Transfers contract control to another doctor.
-
-🔐 Security
-
-Uses Solidity modifier restricted to limit write operations to doctor only.
-
-Prevents unauthorized access to patient data.
-
-All entries are immutable (besides direct update by doctor).
-
-Follows MIT license and Solidity security best practices.
-
-🛠️ Tech Stack
-Layer	Technology
-Smart Contract	Solidity ^0.8.25
-Frontend	React.js + Web3.js
-Blockchain	Ethereum (deploy via MetaMask)
-IoT Layer	Arduino + NodeMCU
-Sensors	MAX30100, DS18B20, GSR
-Cloud	ThingSpeak (for visualization)
-🚀 Deployment
-
-You can deploy this contract using:
-
-1. Remix IDE
-
-Paste contract → Compile → Deploy using Injected Provider (MetaMask)
-
-2. Hardhat / Truffle
-
-Add the contract in contracts/ and deploy via scripts.
-
-🔗 Project Integration
-
-This contract is used in the Remote Patient Monitoring System, where:
-
-IoT sensors collect health parameters
-
-Data is transmitted via Wi-Fi
-
-React UI displays live readings & analytics
-
-Smart contract stores the data on-chain
-
-Cassandra database used for performance comparison
+\end{document}
